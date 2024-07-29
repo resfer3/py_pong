@@ -9,13 +9,19 @@ def main():
   running = True
   dt = 0
 
-  #player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
+  player_pos = pygame.Vector2(screen.get_width() / 2, screen.get_height() / 2)
 
   print(screen.get_width() / 2)
   print(screen.get_height() / 2)
 
-  # 1004
+  player1_rgb = (66, 176, 245)
+  player2_rgb = (245, 66, 81)
+
+  # game-board
   rect = Rect(10 , 50, 1004, 708)
+
+  # player1
+  rect_player1 = Rect(20, 354, 10, 60)
 
   while running:
     # poll for events
@@ -33,6 +39,9 @@ def main():
 
     # draw the center line
     pygame.draw.line(screen, "white", (512, 50), (512, 755), 2)
+
+    # player1 box gameplay
+    pygame.draw.rect(screen, player1_rgb, rect_player1 ,1, 2)
 
 
   #  keys = pygame.key.get_pressed()
