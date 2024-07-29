@@ -1,6 +1,5 @@
 import pygame
 from pygame.locals import *
-from random import randint
 
 class Circle():
 
@@ -63,28 +62,24 @@ def main():
       ball.y -= ball.vel_y
       ball.x += ball.vel_x
 
-
-#        collide_1 = pygame.sprite.collide_collide_(rect_player1, ball)  
-#        collide_2 = pygame.sprite.collide_sprite(rect_player2, ball)
-#        if collide_1 or collide_2:
-#          print("hit")
-#          ball.y -= ball.vel_y
-#          ball.x += ball.vel_x
-      # bounce from wall and keep direction
-      if ball.y >= rect_player2.top and ball.y <= rect_player2.bottom and ball.x - ball.radius <= rect_player2.left and ball.x + ball.radius >= rect_player2.right:
-        ball.vel_x *= -1
-        player2_rgb = (255,255,255)
-      else:
-        player2_rgb = (245, 66, 81)
+      # bounce from wall, if player hit bounce, and keep direction
       if ball.y >= rect_player1.top and ball.y <= rect_player1.bottom and ball.x - ball.radius <= rect_player1.left and ball.x + ball.radius >= rect_player1.right:
         ball.vel_x *= -1
-        player1_rgb = (255,255,255)
+        player1_rgb = (0,255,0)
+        print("hit")
       else:
-        player1_rgb = (66, 176, 245) 
+        player1_rgb = (66, 176, 245)
+      if ball.y >= rect_player2.top and ball.y <= rect_player2.bottom and ball.x - ball.radius <= rect_player2.left and ball.x + ball.radius >= rect_player2.right:
+        ball.vel_x *= -1
+        player2_rgb = (0,255,0)
+        print("hit")
+      else:
+        player2_rgb = (245, 66, 81) 
       if ball.x - ball.radius < collision_surface.left or ball.x + ball.radius > collision_surface.right:
         ball.vel_x *= -1
       if ball.y - ball.radius < collision_surface.top or ball.y + ball.radius > collision_surface.bottom:
         ball.vel_y *= -1
+
     # move player1 
     if keys[pygame.K_w]:
       rect_player1.y -= 100 * dt
