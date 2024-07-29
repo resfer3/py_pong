@@ -1,5 +1,15 @@
 import pygame
 from pygame.locals import *
+from random import randint
+
+class Circle():
+
+  def __init__(self, x, y, radius):
+    self.x = x
+    self.y = y
+    self.radius = radius
+    self.vel_x = 3
+    self.vel_y = 3
 
 def main():
   #pygame setup
@@ -9,8 +19,8 @@ def main():
   running = True
   dt = 0
 
-  print(screen.get_width() / 2)
-  print(screen.get_height() / 2)
+#  print(screen.get_width() / 2)
+#  print(screen.get_height() / 2)
 
   player1_rgb = (66, 176, 245)
   player2_rgb = (245, 66, 81)
@@ -25,6 +35,11 @@ def main():
   rect_player1 = Rect(20, 354, 10, 60)
   rect_player2 = Rect(994, 354, 10, 60)
 
+  # ball starting object
+  ball = Circle(502, 334, 10) 
+
+  # start boolean
+  start = False
 
   while running:
 
@@ -35,6 +50,41 @@ def main():
         running = False
     
     keys = pygame.key.get_pressed() 
+    # start game
+    if keys[pygame.K_SPACE]:
+      start = True
+
+    index_y_hit = 0
+    # checking coordinates x, y for rect_player1, and rect_player2
+    print(f"rect_player1 -> x: {rect_player1.x}", f"y: {rect_player1.y}")
+    print(f"rect_player2 -> x: {rect_player2.x}", f"y: {rect_player2.y}")
+    # ball movement
+    if start:
+      ball.y -= ball.vel_y
+      ball.x += ball.vel_x
+
+
+#        collide_1 = pygame.sprite.collide_collide_(rect_player1, ball)  
+#        collide_2 = pygame.sprite.collide_sprite(rect_player2, ball)
+#        if collide_1 or collide_2:
+#          print("hit")
+#          ball.y -= ball.vel_y
+#          ball.x += ball.vel_x
+      # bounce from wall and keep direction
+      if ball.y >= rect_player2.top and ball.y <= rect_player2.bottom and ball.x - ball.radius <= rect_player2.left and ball.x + ball.radius >= rect_player2.right:
+        ball.vel_x *= -1
+        player2_rgb = (255,255,255)
+      else:
+        player2_rgb = (245, 66, 81)
+      if ball.y >= rect_player1.top and ball.y <= rect_player1.bottom and ball.x - ball.radius <= rect_player1.left and ball.x + ball.radius >= rect_player1.right:
+        ball.vel_x *= -1
+        player1_rgb = (255,255,255)
+      else:
+        player1_rgb = (66, 176, 245) 
+      if ball.x - ball.radius < collision_surface.left or ball.x + ball.radius > collision_surface.right:
+        ball.vel_x *= -1
+      if ball.y - ball.radius < collision_surface.top or ball.y + ball.radius > collision_surface.bottom:
+        ball.vel_y *= -1
     # move player1 
     if keys[pygame.K_w]:
       rect_player1.y -= 100 * dt
@@ -51,6 +101,9 @@ def main():
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
+
+    # draw ball
+    pygame.draw.circle(screen, "purple", (ball.x, ball.y), ball.radius) 
 
     # draw the rectangle play
     pygame.draw.rect(screen, "white", pygame.Rect(rect), 2, 30)
