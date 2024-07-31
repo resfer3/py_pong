@@ -1,5 +1,6 @@
 import pygame
 from pygame.locals import *
+from random import randint
 
 class Circle():
 
@@ -35,7 +36,7 @@ def main():
   rect_player2 = Rect(994, 354, 10, 60)
 
   # ball starting object
-  ball = Circle(502, 334, 10) 
+  ball = Circle(randint(400,600), 334, 10) 
 
   # start boolean
   start = False
@@ -53,11 +54,11 @@ def main():
     if keys[pygame.K_SPACE]:
       start = True
 
-    index_y_hit = 0
     # checking coordinates x, y for rect_player1, and rect_player2
     print(f"rect_player1 -> x: {rect_player1.x}", f"y: {rect_player1.y}")
     print(f"rect_player2 -> x: {rect_player2.x}", f"y: {rect_player2.y}")
     # ball movement
+
     if start:
       ball.y -= ball.vel_y
       ball.x += ball.vel_x
@@ -65,13 +66,13 @@ def main():
       # bounce from wall, if player hit bounce, and keep direction
       if ball.y >= rect_player1.top and ball.y <= rect_player1.bottom and ball.x - ball.radius <= rect_player1.left and ball.x + ball.radius >= rect_player1.right:
         ball.vel_x *= -1
-        player1_rgb = (0,255,0)
+        player1_rgb = (255,255,255)
         print("hit")
       else:
         player1_rgb = (66, 176, 245)
       if ball.y >= rect_player2.top and ball.y <= rect_player2.bottom and ball.x - ball.radius <= rect_player2.left and ball.x + ball.radius >= rect_player2.right:
         ball.vel_x *= -1
-        player2_rgb = (0,255,0)
+        player2_rgb = (255,255,255)
         print("hit")
       else:
         player2_rgb = (245, 66, 81) 
