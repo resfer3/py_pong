@@ -5,6 +5,7 @@ from random import randint
 # Global var
 SCORE1 = 0
 SCORE2 = 0
+RIVAL = False
 
 class Circle():
 
@@ -56,12 +57,19 @@ def main():
   text = font.render("Pong", True, (255, 255, 255), (0, 0, 0))
   text_rect = text.get_rect()
   text_rect.center = (screen.get_width() / 2, 25)
-
-  # scoreboard text
+  
+  # button to start game with player2
+  font_button = pygame.font.Font("freesansbold.ttf", 25)
+  button_surface = pygame.Surface((400, 30))
+  button_text = font_button.render("Play with Rival", True, (255, 255, 255), player2_rgb)
+  button_text_rect = button_text.get_rect(center=(button_surface.get_width()/2, button_surface.get_height()/2))
+  # rect button
+  button_rect = pygame.Rect(30, 10, 400, 30)
 
 #  player1_rgb = (66, 176, 245)
 #  player2_rgb = (245, 66, 81)
 
+  # scoreboard text
   # score1 blue
   global SCORE1, SCORE2
   score1_text = font.render(str(SCORE1), True, (66, 176, 245), (0, 0, 0))
@@ -75,13 +83,25 @@ def main():
   
 
   while running:
-
+  
+    # rival online or not
+    global RIVAL
+    # fill the screen with a color to wipe away anything from last frame
+    screen.fill("black")
 
     # poll for events
     # pygame.QUIT event means the user clicked X to close your window
     for event in pygame.event.get():
       if event.type == pygame.QUIT:
         running = False
+      #check for mouse button event
+      if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+        if button_rect.collidepoint(event.pos):
+          RIVAL = True
+          SCORE1 = 0
+          SCORE2 = 0
+          main()
+          #print("button clicked!")
     
     keys = pygame.key.get_pressed() 
     # start game
@@ -144,23 +164,26 @@ def main():
     if keys[pygame.K_s]:
       rect_player1.y += 300 * dt
     rect_player1.clamp_ip(collision_surface)
-    # TODO // if clicked, create a new game with 0 - 0 scores and you can use the keys
+    # if clicked, create a new game with 0 - 0 scores and you can use the keys
+    if RIVAL:
     # move player2 if player2 is on play with these keys
-#    if keys[pygame.K_i]:
-#      rect_player2.y -= 250 * dt
-#    if keys[pygame.K_k]:
-#      rect_player2.y += 250 * dt
-
-    # a computer player 
-    print(rect_player2.y)
-    if ball.y != rect_player2.y:
-      rect_player2.y = ball.y
+      if keys[pygame.K_i]:
+        rect_player2.y -= 300 * dt
+      if keys[pygame.K_k]:
+        rect_player2.y += 300 * dt
+    else:
+      # a computer player 
+      print(rect_player2.y)
+      if ball.y != rect_player2.y:
+        rect_player2.y = ball.y
 
     rect_player2.clamp_ip(collision_surface)
     
 
-    # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
+        
+    # button to start game with player2
+    button_surface.blit(button_text, button_text_rect) 
+    screen.blit(button_surface, (button_rect.x, button_rect.y))
 
     # draw ball
     pygame.draw.circle(screen, "purple", (ball.x, ball.y), ball.radius) 
