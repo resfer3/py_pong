@@ -2,14 +2,18 @@ import pygame
 from pygame.locals import *
 from random import randint
 
+# Global var
+SCORE1 = 0
+SCORE2 = 0
+
 class Circle():
 
   def __init__(self, x, y, radius):
     self.x = x
     self.y = y
     self.radius = radius
-    self.vel_x = 3
-    self.vel_y = 3
+    self.vel_x = 5
+    self.vel_y = 5
 
 def main():
   #pygame setup
@@ -17,7 +21,7 @@ def main():
   screen = pygame.display.set_mode((1024, 768))
   clock = pygame.time.Clock()
   running = True
-  dt = 0
+  dt = 1
   # window name
   pygame.display.set_caption("Pong")
 
@@ -34,13 +38,13 @@ def main():
   collision_surface = Rect(10, 70, 1004, 668)
 
   # player objects
-  rect_player1 = Rect(20, 354, 10, 60)
-  rect_player2 = Rect(994, 354, 10, 60)
+  rect_player1 = Rect(20, 354, 10, 50)
+  rect_player2 = Rect(994, 354, 10, 50)
 
   # ball starting object
   ball = Circle(512,randint(300, 600), 10) 
 
-  # start boolean
+  # start game
   start = False
 
   # random starting direction
@@ -59,14 +63,12 @@ def main():
 #  player2_rgb = (245, 66, 81)
 
   # score1 blue
-
-  score1 = 0
-  score1_text = font.render(str(score1), True, (66, 176, 245), (0, 0, 0))
+  global SCORE1, SCORE2
+  score1_text = font.render(str(SCORE1), True, (66, 176, 245), (0, 0, 0))
   score1_text_rect = score1_text.get_rect()
   score1_text_rect.center = (251, 200)
   # score1 blue
-  score2 = 0
-  score2_text = font.render(str(score2), True, (245, 66, 81), (0, 0, 0))
+  score2_text = font.render(str(SCORE2), True, (245, 66, 81), (0, 0, 0))
   score2_text_rect = score2_text.get_rect()
   score2_text_rect.center = (751, 200)
 
@@ -126,13 +128,11 @@ def main():
 
        # if opposite wall hit, gain a point // TODO
       if ball.x - ball.radius < collision_surface.left:
-        score2 += 1
-        start = False 
-        continue
+        SCORE2 += 1
+        main()
       if ball.x + ball.radius > collision_surface.right:
-        score1 += 1
-        start = False
-        continue
+        SCORE1 += 1
+        main()
       #if ball.x - ball.radius < collision_surface.left or ball.x + ball.radius > collision_surface.right:
         #ball.vel_x *= -1
       if ball.y - ball.radius < collision_surface.top or ball.y + ball.radius > collision_surface.bottom:
@@ -140,17 +140,24 @@ def main():
 
     # move player1 
     if keys[pygame.K_w]:
-      rect_player1.y -= 100 * dt
+      rect_player1.y -= 300 * dt
     if keys[pygame.K_s]:
-      rect_player1.y += 100 * dt
+      rect_player1.y += 300 * dt
     rect_player1.clamp_ip(collision_surface)
+    # TODO // if clicked, create a new game with 0 - 0 scores and you can use the keys
+    # move player2 if player2 is on play with these keys
+#    if keys[pygame.K_i]:
+#      rect_player2.y -= 250 * dt
+#    if keys[pygame.K_k]:
+#      rect_player2.y += 250 * dt
 
-    # move player2
-    if keys[pygame.K_i]:
-      rect_player2.y -= 100 * dt
-    if keys[pygame.K_k]:
-      rect_player2.y += 100 * dt
+    # a computer player 
+    print(rect_player2.y)
+    if ball.y != rect_player2.y:
+      rect_player2.y = ball.y
+
     rect_player2.clamp_ip(collision_surface)
+    
 
     # fill the screen with a color to wipe away anything from last frame
     screen.fill("black")
