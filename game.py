@@ -146,7 +146,7 @@ def main():
       else:
         player2_rgb = (245, 66, 81) 
 
-       # if opposite wall hit, gain a point // TODO
+       # if opposite wall hit, gain a point // 
       if ball.x - ball.radius < collision_surface.left:
         SCORE2 += 1
         main()
